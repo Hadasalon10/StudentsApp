@@ -1,10 +1,12 @@
 package com.example.studentsapp
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -31,9 +33,9 @@ class StudentsListActivity : AppCompatActivity() {
         )
     }
     class StudentListAdapter(
-        students: List<Student>
+        private val students: List<Student>
     ): BaseAdapter() {
-        override fun getCount(): Int = 20
+        override fun getCount(): Int = students.size
 
         override fun getItem(position: Int): Any? {
             return null
@@ -46,7 +48,17 @@ class StudentsListActivity : AppCompatActivity() {
             convertView: View?,
             parent: ViewGroup?
         ): View {
-            TODO("Not yet implemented")
+            val student = students[position]
+            val inflator = LayoutInflater.from(parent?.context)
+            val view = convertView ?:inflator.inflate(R.layout.student_row_layout, parent, false)
+
+            val nameTextView: TextView = view.findViewById(R.id.students_row_name_text_view)
+            val idTextView: TextView = view.findViewById(R.id.students_row_id_text_view)
+
+            nameTextView.text = student.name
+            idTextView.text = student.id
+
+            return view
         }
     }
 }
