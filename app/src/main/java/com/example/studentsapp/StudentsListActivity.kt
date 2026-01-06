@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.CheckBox
 import android.widget.ListView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -50,13 +51,28 @@ class StudentsListActivity : AppCompatActivity() {
         ): View {
             val student = students[position]
             val inflator = LayoutInflater.from(parent?.context)
-            val view = convertView ?:inflator.inflate(R.layout.student_row_layout, parent, false)
+
+            var view = convertView
+            if(convertView == null) {
+                view = inflator.inflate(R.layout.student_row_layout, parent, false)
+                val checkbox: CheckBox = view.findViewById(R.id.students_row_checkBox)
+                checkbox.setOnClickListener { view ->
+                    (view?.tag as? Int)?.let { tag ->
+                        student.isChecked = checkbox.isChecked
+                    }
+                }
+            }
 
             val nameTextView: TextView = view.findViewById(R.id.students_row_name_text_view)
             val idTextView: TextView = view.findViewById(R.id.students_row_id_text_view)
+            val checkbox: CheckBox = view.findViewById(R.id.students_row_checkBox)
 
-            nameTextView.text = student.name
-            idTextView.text = student.id
+            nameTextView.text = students[position].name
+            idTextView.text = students[position].id
+            checkbox.apply {
+                checkbox.isChecked = students[position].isChecked
+                tag = position
+            }
 
             return view
         }
