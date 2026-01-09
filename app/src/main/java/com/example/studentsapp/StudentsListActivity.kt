@@ -1,5 +1,6 @@
 package com.example.studentsapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.CheckBox
@@ -15,6 +16,7 @@ import com.example.studentsapp.models.Model
 import com.example.studentsapp.models.Student
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 
 
 class StudentsListActivity : AppCompatActivity() {
@@ -34,6 +36,12 @@ class StudentsListActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = StudentAdapter(students = students)
+
+        val button: Button = findViewById(R.id.add_student_button)
+        button.setOnClickListener {
+            val intent = Intent(this, NewStudentActivity::class.java)
+            startActivity(intent)
+        }
     }
     // Activity in the adapter
 
