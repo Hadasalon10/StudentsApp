@@ -12,6 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentsApp">
         <activity
+            android:name=".StudentsListActivity"
+            android:exported="true" >
+        </activity>
+        <activity
             android:name=".EditStudentActivity"
             android:exported="false" />
         <activity
@@ -19,11 +23,8 @@
             android:exported="false" />
         <activity
             android:name=".NewStudentActivity"
-            android:exported="true" >
-        </activity>
-        <activity
-            android:name=".StudentsListActivity"
-            android:exported="true" >
+            android:exported="true">
+
         </activity>
         <activity
             android:name=".MainActivity"

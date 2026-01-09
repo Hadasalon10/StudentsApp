@@ -21,17 +21,6 @@ class NewStudentActivity : AppCompatActivity() {
             insets
         }
 
-//        val button: Button = findViewById(R.id.new_student_save_button)
-//
-//        class MyOnClickListener : View.OnClickListener {
-//            override fun onClick(v: View?) {
-//                print("This button was clicked")
-//            }
-//
-//        }
-//        val listener = MyOnClickListener()
-//        button.setOnClickListener(listener)
-
         val newStudentButton: Button = findViewById(R.id.new_student_save_button)
         val cancelButton: Button = findViewById(R.id.new_student_cancel_button)
 
