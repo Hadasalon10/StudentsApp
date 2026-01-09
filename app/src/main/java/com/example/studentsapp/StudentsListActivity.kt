@@ -1,19 +1,21 @@
 package com.example.studentsapp
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.CheckBox
-import android.widget.ListView
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.studentsapp.models.Model
 import com.example.studentsapp.models.Student
+import android.view.LayoutInflater
+import android.view.ViewGroup
+
 
 class StudentsListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,56 +27,52 @@ class StudentsListActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        // RecyclerView position
+        val recyclerView: RecyclerView = findViewById(R.id.studentsRecyclerView)
 
         val students = Model.shared.students
 
-        val listView: ListView = findViewById(R.id.student_list_activity_list_view)
-        listView.adapter = StudentListAdapter(
-            students = students
-        )
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = StudentAdapter(students = students)
     }
-    class StudentListAdapter(
+    // Activity in the adapter
+
+    class StudentAdapter(
         private val students: List<Student>
-    ): BaseAdapter() {
-        override fun getCount(): Int = students.size
+    ) : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {
 
-        override fun getItem(position: Int): Any? {
-            return null
+        // ViewHolder
+         class StudentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            val nameTextView: TextView = itemView.findViewById(R.id.students_row_name_text_view)
+            val idTextView: TextView = itemView.findViewById(R.id.students_row_id_text_view)
+            val avatarImageView: ImageView = itemView.findViewById(R.id.students_row_avatar_image_view)
+            val checkBox: CheckBox = itemView.findViewById(R.id.students_row_checkBox)
         }
 
-        override fun getItemId(position: Int): Long = 0
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.student_row_layout, parent, false)
+            return StudentViewHolder(view)
+        }
 
-        override fun getView(
-            position: Int,
-            convertView: View?,
-            parent: ViewGroup?
-        ): View {
+        override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
             val student = students[position]
-            val inflator = LayoutInflater.from(parent?.context)
 
-            var view = convertView
-            if(convertView == null) {
-                view = inflator.inflate(R.layout.student_row_layout, parent, false)
-                val checkbox: CheckBox = view.findViewById(R.id.students_row_checkBox)
-                checkbox.setOnClickListener { view ->
-                    (view?.tag as? Int)?.let { tag ->
-                        student.isChecked = checkbox.isChecked
-                    }
-                }
+            // cancel the previous listener
+            holder.checkBox.setOnCheckedChangeListener(null)
+
+            holder.nameTextView.text = student.name
+            holder.idTextView.text = student.id
+            holder.checkBox.isChecked = student.isChecked
+
+            holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+                student.isChecked = isChecked
             }
 
-            val nameTextView: TextView = view.findViewById(R.id.students_row_name_text_view)
-            val idTextView: TextView = view.findViewById(R.id.students_row_id_text_view)
-            val checkbox: CheckBox = view.findViewById(R.id.students_row_checkBox)
-
-            nameTextView.text = students[position].name
-            idTextView.text = students[position].id
-            checkbox.apply {
-                checkbox.isChecked = students[position].isChecked
-                tag = position
-            }
-
-            return view
+            holder.avatarImageView.setImageResource(R.drawable.profile)
         }
+
+
+        override fun getItemCount(): Int = students.size
     }
 }
