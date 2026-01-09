@@ -35,7 +35,11 @@ class StudentsListActivity : AppCompatActivity() {
         val students = Model.shared.students
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = StudentAdapter(students = students)
+        recyclerView.adapter = StudentAdapter(students = students) { position ->
+            val intent = Intent(this, StudentDetailsActivity::class.java)
+            intent.putExtra("student_index", position)
+            startActivity(intent)
+        }
 
         val button: Button = findViewById(R.id.add_student_button)
         button.setOnClickListener {
@@ -46,11 +50,12 @@ class StudentsListActivity : AppCompatActivity() {
     // Activity in the adapter
 
     class StudentAdapter(
-        private val students: List<Student>
+        private val students: List<Student>,
+        private val onItemClick: (Int) -> Unit //
     ) : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {
 
         // ViewHolder
-         class StudentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        class StudentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val nameTextView: TextView = itemView.findViewById(R.id.students_row_name_text_view)
             val idTextView: TextView = itemView.findViewById(R.id.students_row_id_text_view)
             val avatarImageView: ImageView = itemView.findViewById(R.id.students_row_avatar_image_view)
@@ -72,12 +77,15 @@ class StudentsListActivity : AppCompatActivity() {
             holder.nameTextView.text = student.name
             holder.idTextView.text = student.id
             holder.checkBox.isChecked = student.isChecked
+            holder.avatarImageView.setImageResource(R.drawable.profile)
 
             holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
                 student.isChecked = isChecked
             }
 
-            holder.avatarImageView.setImageResource(R.drawable.profile)
+            holder.itemView.setOnClickListener {
+                onItemClick(position)
+            }
         }
 
 
